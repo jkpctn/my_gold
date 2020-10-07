@@ -92,7 +92,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     color: Colors.white),
                               ),
                               Text(
-                                '10 items',
+                                '0 items',
                                 style: TextStyle(
                                     fontSize: 30,
                                     fontWeight: FontWeight.w600,
@@ -134,7 +134,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                   color: Colors.white),
                             ),
                             Text(
-                              '10 items',
+                              '0 items',
                               style: TextStyle(
                                   fontSize: 30,
                                   fontWeight: FontWeight.w600,

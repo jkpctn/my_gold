@@ -1,23 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../config/routes.dart';
+
 class DisplayBuyOrderScreen extends StatelessWidget {
   int item = 0;
-
-  Map buyItem1 = {
-    'goldPrice': 25000,
-    'weight': 200,
-    'fee': 700,
-    'goldPercentage': 90,
-    'price': 20000
-  };
-  Map buyItem2 = {
-    'goldPrice': 28000,
-    'weight': 300,
-    'fee': 500,
-    'goldPercentage': 20,
-    'price': 20000
-  };
   List<Map> data = [
     {
       'goldPrice': 25000,
@@ -37,13 +24,13 @@ class DisplayBuyOrderScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
+          child: Scaffold(
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(180.0),
           child: AppBar(
             flexibleSpace: Padding(
-              padding: const EdgeInsets.only(
-                  left: 20, top: 60, right: 20, bottom: 20),
+              padding:
+                  const EdgeInsets.only(left: 20, top: 60, right: 20, bottom: 20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -52,7 +39,7 @@ class DisplayBuyOrderScreen extends StatelessWidget {
                     style: TextStyle(fontSize: 45, fontWeight: FontWeight.w800),
                   ),
                   Text(
-                    '$item รายการ',
+                    '${data.length} รายการ',
                     style: TextStyle(fontSize: 30, fontWeight: FontWeight.w800),
                   ),
                 ],
@@ -66,9 +53,10 @@ class DisplayBuyOrderScreen extends StatelessWidget {
           width: 100,
           child: FittedBox(
             child: FloatingActionButton(
-              onPressed: () {},
+              onPressed: () =>
+                        {Navigator.of(context).pushNamed(AppRoutes.addBuyOrder)},
               child: Icon(Icons.add),
-              backgroundColor: Colors.white,
+              backgroundColor: Colors.blue[300],
             ),
           ),
         ),
@@ -85,19 +73,6 @@ class DisplayBuyOrderScreen extends StatelessWidget {
                         '${data[index]['weight']}   ${data[index]['price']}',
                         style: TextStyle(fontSize: 25),
                       ),
-                      // onTap: () {
-                      //   Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //       builder: (context) => DetailScreen(
-                      //         todo: data,
-                      //         currentIDX: index,
-                      //         nextPersonIDX:
-                      //             _findNextPersonIDX(index),
-                      //       ),
-                      //     ),
-                      //   );
-                      // }
                     )));
           },
         ),
