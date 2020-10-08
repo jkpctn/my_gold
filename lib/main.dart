@@ -6,7 +6,6 @@ import 'package:my_gold/presentation/home_screen.dart';
 
 import 'config/routes.dart';
 
-//start class 17:10
 void main() {
   runApp(MyApp());
 }
@@ -35,13 +34,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-          primarySwatch: Colors.blue,
+          primarySwatch: Colors.orange,
           visualDensity: VisualDensity.adaptivePlatformDensity,
           fontFamily: 'THSarabunNew'),
       routes: {
         AppRoutes.home: (context) => MyHomePage(),
         AppRoutes.showBuyOrder: (context) => DisplayBuyOrderScreen(),
-        AppRoutes.addBuyOrder: (context)=> AddBuyOrderScreen()
+        AppRoutes.addBuyOrder: (context) => AddBuyOrderScreen()
       },
     );
   }

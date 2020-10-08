@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:numberpicker/numberpicker.dart';
 
 const header_textstyle = TextStyle(fontSize: 45, fontWeight: FontWeight.w800);
-const button_textstyle = TextStyle(fontSize: 20, fontWeight: FontWeight.w800);
+const button_textstyle = TextStyle(fontSize: 5, fontWeight: FontWeight.w800);
 
 class AddBuyOrderScreen extends StatefulWidget {
   @override
@@ -17,11 +17,13 @@ class _AddBuyOrderScreenState extends State<AddBuyOrderScreen> {
     weight = tappedWeight;
     setState(() {});
   }
-void changeGoldPercentage(double tappedWeight) {
+
+  void changeGoldPercentage(double tappedWeight) {
     debugPrint('w $weight tap $tappedWeight');
     _currentGoldPercentage = tappedWeight;
     setState(() {});
   }
+
   bool isSelectedWeight(double buttonweight) {
     if (buttonweight == weight) {
       debugPrint('$buttonweight,$weight');
@@ -52,6 +54,7 @@ void changeGoldPercentage(double tappedWeight) {
           if (value != null) {setState(() => weight = value)}
         });
   }
+
   void _showCustomGoldPercentage() {
     debugPrint('CustomWeight');
     showDialog<double>(
@@ -67,22 +70,23 @@ void changeGoldPercentage(double tappedWeight) {
           if (value != null) {setState(() => _currentGoldPercentage = value)}
         });
   }
+
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-            title: Text(
-          'New Buy Order',
-        )),
-        body: Padding(
-          padding: const EdgeInsets.all(10.0),
+    return Scaffold(
+      appBar: AppBar(
+          title: Text(
+        'New Buy Order',
+      )),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
-                'Gold Price',
+                'ราคาซื้อเข้า',
                 style: header_textstyle,
               ),
               Text(
@@ -90,14 +94,14 @@ void changeGoldPercentage(double tappedWeight) {
                 style: TextStyle(fontSize: 30),
               ),
               Text(
-                'Gold Weight',
+                'น้ำหนักทอง',
                 style: TextStyle(fontSize: 45, fontWeight: FontWeight.w800),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  selectButton('0.6', 0.6, isSelectedWeight(0.6)),
-                  selectButton('1.6', 1.6, isSelectedWeight(1.6)),
+                  selectButton('0.6 กรัม', 0.6, isSelectedWeight(0.6)),
+                  selectButton('1.6 กรัม', 1.6, isSelectedWeight(1.6)),
                   selectButton('1.9', 1.9, isSelectedWeight(1.9)),
                   selectButton('3.8', 3.8, isSelectedWeight(3.8)),
                 ],
@@ -105,9 +109,9 @@ void changeGoldPercentage(double tappedWeight) {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  selectButton('7.6', 7.6, isSelectedWeight(7.6)),
-                  selectButton('15.2', 15.2, isSelectedWeight(15.2)),
-                  selectButton('30.4', 30.4, isSelectedWeight(30.4)),
+                  selectButton('7.6 g', 7.6, isSelectedWeight(7.6)),
+                  selectButton('15.2 g', 15.2, isSelectedWeight(15.2)),
+                  selectButton('30.4 g', 30.4, isSelectedWeight(30.4)),
                   RaisedButton(
                     child: Text('Custom'),
                     onPressed: () => _showCustomWeight(),
@@ -115,21 +119,26 @@ void changeGoldPercentage(double tappedWeight) {
                 ],
               ),
               Text(
-                'Gold Percentage',
+                'เปอร์เซ็นทอง',
                 style: TextStyle(fontSize: 45, fontWeight: FontWeight.w800),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  selectGoldButton('70', 70, isSelectedGoldPercentage(70)),
-                  selectGoldButton('80', 80, isSelectedGoldPercentage(80)),
-                  selectGoldButton('96.5', 96.5, isSelectedGoldPercentage(96.5)),
+                  selectGoldButton('70 %', 70, isSelectedGoldPercentage(70)),
+                  selectGoldButton('80 %', 80, isSelectedGoldPercentage(80)),
+                  selectGoldButton(
+                      '96.5 %', 96.5, isSelectedGoldPercentage(96.5)),
                   RaisedButton(
                     child: Text('Custom'),
                     onPressed: () => _showCustomGoldPercentage(),
                   )
                 ],
               ),
+              RaisedButton(
+                child: Text('hello'),
+                onPressed: null,
+              )
             ],
           ),
         ),
@@ -154,6 +163,7 @@ void changeGoldPercentage(double tappedWeight) {
       ),
     );
   }
+
   Container selectGoldButton(
       String title, double weightGrams, bool isSelectedWeight) {
     return Container(
