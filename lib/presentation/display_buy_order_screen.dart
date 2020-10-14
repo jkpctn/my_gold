@@ -133,6 +133,7 @@ class DisplayBuyOrderScreen extends StatelessWidget {
               itemBuilder: (context, index) {
                 return Container(
                     height: 150,
+                    width: 50,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(24),
                         gradient: LinearGradient(
