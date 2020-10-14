@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:my_gold/config/routes.dart';
 import 'package:my_gold/presentation/add_buy_order_screen.dart';
 import 'package:my_gold/presentation/display_buy_order_screen.dart';
+import 'package:my_gold/presentation/edit_buy_order_screen.dart';
 import 'package:my_gold/presentation/home_screen.dart';
 
 import 'config/routes.dart';
@@ -40,7 +41,8 @@ class MyApp extends StatelessWidget {
       routes: {
         AppRoutes.home: (context) => MyHomePage(),
         AppRoutes.showBuyOrder: (context) => DisplayBuyOrderScreen(),
-        AppRoutes.addBuyOrder: (context) => AddBuyOrderScreen()
+        AppRoutes.addBuyOrder: (context) => AddBuyOrderScreen(),
+        AppRoutes.editBuyOrder: (context) => EditBuyOrderScreen()
       },
     );
   }

@@ -4,15 +4,16 @@ import 'package:numberpicker/numberpicker.dart';
 const header_textstyle = TextStyle(fontSize: 45, fontWeight: FontWeight.w800);
 const button_textstyle = TextStyle(fontSize: 5, fontWeight: FontWeight.w800);
 
-class AddBuyOrderScreen extends StatefulWidget {
+class EditBuyOrderScreen extends StatefulWidget {
   @override
-  _AddBuyOrderScreenState createState() => _AddBuyOrderScreenState();
+  _EditBuyOrderScreenState createState() => _EditBuyOrderScreenState();
 }
 
-class _AddBuyOrderScreenState extends State<AddBuyOrderScreen> {
-  double goldPrice = 28000;
-  double weight = 0.0;
-  double _currentGoldPercentage = 100;
+class _EditBuyOrderScreenState extends State<EditBuyOrderScreen> {
+  double goldPrice;
+  double weight;
+  double currentGoldPercentage;
+  
   void changeWeight(double tappedWeight) {
     debugPrint('w $weight tap $tappedWeight');
     weight = tappedWeight;
@@ -21,7 +22,7 @@ class _AddBuyOrderScreenState extends State<AddBuyOrderScreen> {
 
   void changeGoldPercentage(double tappedWeight) {
     debugPrint('w $weight tap $tappedWeight');
-    _currentGoldPercentage = tappedWeight;
+    currentGoldPercentage = tappedWeight;
     setState(() {});
   }
 
@@ -34,15 +35,15 @@ class _AddBuyOrderScreenState extends State<AddBuyOrderScreen> {
   }
 
   bool isSelectedGoldPercentage(double buttonPercentage) {
-    if (buttonPercentage == _currentGoldPercentage) {
+    if (buttonPercentage == currentGoldPercentage) {
       return true;
     } else
       return false;
   }
 
-  void _addBuyOrder() {
+  void _EditBuyOrder() {
 
-          Navigator.pop(context,'gp $goldPrice w $weight pct $_currentGoldPercentage');
+          Navigator.pop(context,'gp $goldPrice w $weight pct $currentGoldPercentage');
 
   }
 
@@ -71,10 +72,10 @@ class _AddBuyOrderScreenState extends State<AddBuyOrderScreen> {
             minValue: 0,
             maxValue: 100,
             title: new Text("Pick new weight"),
-            initialDoubleValue: _currentGoldPercentage,
+            initialDoubleValue: currentGoldPercentage,
           );
         }).then((value) => {
-          if (value != null) {setState(() => _currentGoldPercentage = value)}
+          if (value != null) {setState(() => currentGoldPercentage = value)}
         });
   }
 
@@ -146,13 +147,13 @@ class _AddBuyOrderScreenState extends State<AddBuyOrderScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  orderCard(weight, _currentGoldPercentage, goldPrice),
+                  orderCard(weight, currentGoldPercentage, goldPrice),
                 ],
               ),
               SizedBox(height: 50,),
               Center(
                 child: RaisedButton(
-                  child: Text('Add'),onPressed: _addBuyOrder),
+                  child: Text('Save'),onPressed: _EditBuyOrder),
               )
             ],
           ),
@@ -230,7 +231,7 @@ Container orderCard(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
                       Text(
-                        'ราคาซื้อเข้า',
+                        'ราคาซื้อเ2222ข้า',
                         style: detailText,
                       ),
                       Text(

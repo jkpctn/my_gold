@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:my_gold/config/routes.dart';
-
+import 'package:my_gold/presentation/display_buy_order_screen.dart';
+import 'package:my_gold/presentation/data.dart';
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key}) : super(key: key);
 
@@ -10,20 +11,51 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  
   int _selectedIndex = 0;
   String date = '20 กันยายน 2563';
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+      switch (_selectedIndex) {
+        case 0:
+          {
+            //Navigator.of(context).pushNamed(AppRoutes.showBuyOrder);
+            break;
+          }
+        case 1:
+          {
+            Navigator.of(context).pushNamed(AppRoutes.showBuyOrder);
+            break;
+          }
+        case 2:
+          {
+            //Navigator.of(context).pushNamed(AppRoutes.showBuyOrder);
+            break;
+          }
+      }
     });
+  }
+
+  _navigateAndDisplayAddData(BuildContext context) async {
+    // Navigator.push returns a Future that completes after calling
+    // Navigator.pop on the Selection Screen.
+    final result =
+        await Navigator.of(context).pushNamed(AppRoutes.addBuyOrder);
+    _scaffoldKey.currentState
+    ..removeCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text("$result")));
   }
 
   void selectDate() {}
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
+      appBar: AppBar(title: Text('Home'),),
       body: Padding(
         padding: const EdgeInsets.only(top: 10.0),
         child: SafeArea(
@@ -60,8 +92,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   style: TextStyle(fontSize: 45, fontWeight: FontWeight.w800),
                 ),
                 GestureDetector(
-                  onTap: () =>
-                      {Navigator.of(context).pushNamed(AppRoutes.showBuyOrder)},
+                  onTap: ()=> {_navigateAndDisplayAddData(context)},
                   child: Container(
                     decoration: BoxDecoration(
                         color: Colors.black87,
@@ -171,6 +202,29 @@ class _MyHomePageState extends State<MyHomePage> {
         selectedItemColor: Colors.amber[800],
         onTap: _onItemTapped,
       ),
+      // bottomNavigationBar: BottomNavigationBar(
+      //   currentIndex: _selectedIndex,
+      //   onTap: _onItemTapped,
+      //   items: allDestinations.map((Destination destination) {
+      //     return BottomNavigationBarItem(
+      //       icon: Icon(destination.icon),
+      //       backgroundColor: destination.color,
+      //       title: Text(destination.title)
+      //     );
+      //   }).toList(),
+      // ),
     );
   }
 }
+class Destination {
+  const Destination(this.title, this.icon, this.color);
+  final String title;
+  final IconData icon;
+  final MaterialColor color;
+}
+
+const List<Destination> allDestinations = <Destination>[
+  Destination('หน้าแรก', Icons.home, Colors.teal),
+  Destination('สถิติ', Icons.assessment, Colors.cyan),
+  Destination('คำนวณ', Icons.home, Colors.orange),
+];
