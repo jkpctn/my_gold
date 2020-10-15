@@ -56,8 +56,8 @@ class _EditBuyOrderScreenState extends State<EditBuyOrderScreen> {
   }
 
   void editBuyOrder() {
-    Navigator.pop(context,
-        'new gp $goldPrice new w $weight newpct $currentGoldPercentage newprice $price');
+    Navigator.pop(
+        context, BuyOrder(goldPrice, weight, currentGoldPercentage, price));
   }
 
   void _showCustomWeight() {

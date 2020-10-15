@@ -33,7 +33,7 @@ class _DisplayBuyOrderScreenState extends State<DisplayBuyOrderScreen> {
     // Navigator.pop on the Selection Screen.
     final result = await Navigator.of(context)
         .pushNamed(AppRoutes.editBuyOrder, arguments: tmporders[index]);
-    //*need fix
+    //*need
     // setState(() {
     //   tmporders.add(result);
     // });
@@ -56,8 +56,8 @@ class _DisplayBuyOrderScreenState extends State<DisplayBuyOrderScreen> {
           width: 100,
           child: FittedBox(
             child: FloatingActionButton(
-              onPressed: () =>
-                  {Navigator.of(context).pushNamed(AppRoutes.addBuyOrder)},
+              onPressed: () => null,
+              //{Navigator.of(context).pushNamed(AppRoutes.addBuyOrder)},
               child: Icon(Icons.add),
               backgroundColor: Colors.white,
             ),
