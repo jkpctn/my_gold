@@ -4,6 +4,7 @@ import 'package:my_gold/presentation/add_buy_order_screen.dart';
 import 'package:my_gold/presentation/display_buy_order_screen.dart';
 import 'package:my_gold/presentation/edit_buy_order_screen.dart';
 import 'package:my_gold/presentation/home_screen.dart';
+import 'package:my_gold/resource/data.dart';
 
 import 'config/routes.dart';
 
@@ -38,12 +39,39 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.orange,
           visualDensity: VisualDensity.adaptivePlatformDensity,
           fontFamily: 'THSarabunNew'),
-      routes: {
-        AppRoutes.home: (context) => MyHomePage(),
-        AppRoutes.showBuyOrder: (context) => DisplayBuyOrderScreen(),
-        AppRoutes.addBuyOrder: (context) => AddBuyOrderScreen(),
-        AppRoutes.editBuyOrder: (context) => EditBuyOrderScreen()
-      },
+      // routes: {
+      //   AppRoutes.home: (context) => MyHomePage(),
+      //   AppRoutes.showBuyOrder: (context) => DisplayBuyOrderScreen(),
+      //   AppRoutes.addBuyOrder: (context) => AddBuyOrderScreen(),
+      //   AppRoutes.editBuyOrder: (context) => EditBuyOrderScreen()
+      // },
+      onGenerateRoute: _registerRouteWithParameters,
+      home: MyHomePage(),
     );
   }
+}
+
+Route _registerRouteWithParameters(RouteSettings settings) {
+  if (settings.name == AppRoutes.showBuyOrder) {
+    return MaterialPageRoute(builder: (context) {
+      List<BuyOrder> args = settings.arguments;
+      return DisplayBuyOrderScreen(
+        orders: args,
+      );
+    });
+  }
+  if (settings.name == AppRoutes.addBuyOrder) {
+    return MaterialPageRoute(builder: (context) {
+      return AddBuyOrderScreen();
+    });
+  }
+  if (settings.name == AppRoutes.editBuyOrder) {
+    BuyOrder tmp = settings.arguments;
+    return MaterialPageRoute(builder: (context) {
+      return EditBuyOrderScreen(
+        targetBuyOrder: tmp,
+      );
+    });
+  }
+  return null;
 }

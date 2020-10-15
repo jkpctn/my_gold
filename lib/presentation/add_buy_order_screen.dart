@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_gold/resource/data.dart';
 import 'package:numberpicker/numberpicker.dart';
 
 const header_textstyle = TextStyle(fontSize: 45, fontWeight: FontWeight.w800);
@@ -13,6 +14,7 @@ class _AddBuyOrderScreenState extends State<AddBuyOrderScreen> {
   double goldPrice = 28000;
   double weight = 0.0;
   double _currentGoldPercentage = 100;
+  double price = 555555;
   void changeWeight(double tappedWeight) {
     debugPrint('w $weight tap $tappedWeight');
     weight = tappedWeight;
@@ -41,9 +43,8 @@ class _AddBuyOrderScreenState extends State<AddBuyOrderScreen> {
   }
 
   void _addBuyOrder() {
-
-          Navigator.pop(context,'gp $goldPrice w $weight pct $_currentGoldPercentage');
-
+    Navigator.pop(
+        context, BuyOrder(goldPrice, weight, _currentGoldPercentage, price));
   }
 
   void _showCustomWeight() {
@@ -142,17 +143,21 @@ class _AddBuyOrderScreenState extends State<AddBuyOrderScreen> {
                   )
                 ],
               ),
-              SizedBox(height: 50,),
+              SizedBox(
+                height: 50,
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   orderCard(weight, _currentGoldPercentage, goldPrice),
                 ],
               ),
-              SizedBox(height: 50,),
+              SizedBox(
+                height: 50,
+              ),
               Center(
-                child: RaisedButton(
-                  child: Text('Add'),onPressed: _addBuyOrder),
+                child:
+                    RaisedButton(child: Text('Add'), onPressed: _addBuyOrder),
               )
             ],
           ),

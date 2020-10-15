@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:my_gold/presentation/data.dart';
+import 'package:my_gold/resource/data.dart';
 import '../config/routes.dart';
 
 const TextStyle detailText = TextStyle(
@@ -9,6 +9,9 @@ const TextStyle detailText = TextStyle(
 );
 
 class DisplayBuyOrderScreen extends StatefulWidget {
+  final orders;
+
+  const DisplayBuyOrderScreen({Key key, this.orders}) : super(key: key);
   //final data;
   @override
   _DisplayBuyOrderScreenState createState() => _DisplayBuyOrderScreenState();
@@ -16,25 +19,33 @@ class DisplayBuyOrderScreen extends StatefulWidget {
 
 class _DisplayBuyOrderScreenState extends State<DisplayBuyOrderScreen> {
   int item = 0;
-
   double _padding = 20;
-
+  List<BuyOrder> tmporders;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  @override
+  void initState() {
+    super.initState();
+    tmporders = widget.orders;
+  }
 
-    _navigateAndDisplayEditData(BuildContext context) async {
+  _navigateAndDisplayEditData(BuildContext context, index) async {
     // Navigator.push returns a Future that completes after calling
     // Navigator.pop on the Selection Screen.
-    final result =
-        await Navigator.of(context).pushNamed(AppRoutes.addBuyOrder);
+    final result = await Navigator.of(context)
+        .pushNamed(AppRoutes.editBuyOrder, arguments: tmporders[index]);
+    //*need fix
+    // setState(() {
+    //   tmporders.add(result);
+    // });
     _scaffoldKey.currentState
-    ..removeCurrentSnackBar()
-    ..showSnackBar(SnackBar(content: Text("$result")));
+      ..removeCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text("$result")));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey,
+        key: _scaffoldKey,
         backgroundColor: Colors.white,
         appBar: AppBar(
           title: Text('ซื้อเข้า ${data.length} รายการ'),
@@ -46,7 +57,7 @@ class _DisplayBuyOrderScreenState extends State<DisplayBuyOrderScreen> {
           child: FittedBox(
             child: FloatingActionButton(
               onPressed: () =>
-                  {Navigator.of(context).pushNamed(AppRoutes.editBuyOrder)},
+                  {Navigator.of(context).pushNamed(AppRoutes.addBuyOrder)},
               child: Icon(Icons.add),
               backgroundColor: Colors.white,
             ),
@@ -68,10 +79,10 @@ class _DisplayBuyOrderScreenState extends State<DisplayBuyOrderScreen> {
                 color: Colors.transparent,
                 height: 20,
               ),
-              itemCount: data.length,
+              itemCount: tmporders.length,
               itemBuilder: (context, index) {
                 return GestureDetector(
-                  onTap:  () => {_navigateAndDisplayEditData(context)},
+                  onTap: () => {_navigateAndDisplayEditData(context, index)},
                   child: Container(
                       height: 150,
                       width: 100,
@@ -146,15 +157,15 @@ class _DisplayBuyOrderScreenState extends State<DisplayBuyOrderScreen> {
                                         MainAxisAlignment.spaceEvenly,
                                     children: <Widget>[
                                       Text(
-                                        '28000 บาท',
+                                        '${tmporders[index].goldPrice} บาท',
                                         style: detailText,
                                       ),
                                       Text(
-                                        '0.6 กรัม',
+                                        '${tmporders[index].weight} กรัม',
                                         style: detailText,
                                       ),
                                       Text(
-                                        '70 %',
+                                        '${tmporders[index].goldPercentage} %',
                                         style: detailText,
                                       )
                                     ],
@@ -183,7 +194,7 @@ class _DisplayBuyOrderScreenState extends State<DisplayBuyOrderScreen> {
                                         style: detailText,
                                       ),
                                       Text(
-                                        '11700   บาท',
+                                        '${tmporders[index].price.toInt()}   บาท',
                                         style: detailText,
                                       )
                                     ],

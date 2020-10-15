@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:my_gold/resource/data.dart';
 import 'package:numberpicker/numberpicker.dart';
 
 const header_textstyle = TextStyle(fontSize: 45, fontWeight: FontWeight.w800);
 const button_textstyle = TextStyle(fontSize: 5, fontWeight: FontWeight.w800);
 
 class EditBuyOrderScreen extends StatefulWidget {
+  final BuyOrder targetBuyOrder;
+
+  const EditBuyOrderScreen({Key key, this.targetBuyOrder}) : super(key: key);
+
   @override
   _EditBuyOrderScreenState createState() => _EditBuyOrderScreenState();
 }
@@ -13,7 +18,16 @@ class _EditBuyOrderScreenState extends State<EditBuyOrderScreen> {
   double goldPrice;
   double weight;
   double currentGoldPercentage;
-  
+  double price;
+  @override
+  void initState() {
+    super.initState();
+    goldPrice = widget.targetBuyOrder.goldPrice;
+    weight = widget.targetBuyOrder.weight;
+    currentGoldPercentage = widget.targetBuyOrder.goldPercentage;
+    price = widget.targetBuyOrder.price;
+  }
+
   void changeWeight(double tappedWeight) {
     debugPrint('w $weight tap $tappedWeight');
     weight = tappedWeight;
@@ -41,10 +55,9 @@ class _EditBuyOrderScreenState extends State<EditBuyOrderScreen> {
       return false;
   }
 
-  void _EditBuyOrder() {
-
-          Navigator.pop(context,'gp $goldPrice w $weight pct $currentGoldPercentage');
-
+  void editBuyOrder() {
+    Navigator.pop(context,
+        'new gp $goldPrice new w $weight newpct $currentGoldPercentage newprice $price');
   }
 
   void _showCustomWeight() {
@@ -143,17 +156,21 @@ class _EditBuyOrderScreenState extends State<EditBuyOrderScreen> {
                   )
                 ],
               ),
-              SizedBox(height: 50,),
+              SizedBox(
+                height: 50,
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  orderCard(weight, currentGoldPercentage, goldPrice),
+                  orderCard(weight, currentGoldPercentage, goldPrice, price),
                 ],
               ),
-              SizedBox(height: 50,),
+              SizedBox(
+                height: 50,
+              ),
               Center(
-                child: RaisedButton(
-                  child: Text('Save'),onPressed: _EditBuyOrder),
+                child:
+                    RaisedButton(child: Text('Save'), onPressed: editBuyOrder),
               )
             ],
           ),
@@ -200,7 +217,7 @@ class _EditBuyOrderScreenState extends State<EditBuyOrderScreen> {
 }
 
 Container orderCard(
-    double weightGrams, double goldPercentage, double goldPrice) {
+    double weightGrams, double goldPercentage, double goldPrice, double price) {
   double _padding = 20;
   const TextStyle detailText =
       TextStyle(fontSize: 20, fontWeight: FontWeight.w800);
@@ -231,7 +248,7 @@ Container orderCard(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
                       Text(
-                        'ราคาซื้อเ2222ข้า',
+                        'ราคาซื้อเข้า',
                         style: detailText,
                       ),
                       Text(
@@ -308,7 +325,7 @@ Container orderCard(
                         style: detailText,
                       ),
                       Text(
-                        '11700   บาท',
+                        '${price.toInt()}   บาท',
                         style: detailText,
                       )
                     ],

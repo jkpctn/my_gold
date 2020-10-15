@@ -2,7 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:my_gold/config/routes.dart';
 import 'package:my_gold/presentation/display_buy_order_screen.dart';
-import 'package:my_gold/presentation/data.dart';
+import 'package:my_gold/resource/data.dart';
+
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key}) : super(key: key);
 
@@ -11,7 +12,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  
   int _selectedIndex = 0;
   String date = '20 กันยายน 2563';
 
@@ -26,7 +26,8 @@ class _MyHomePageState extends State<MyHomePage> {
           }
         case 1:
           {
-            Navigator.of(context).pushNamed(AppRoutes.showBuyOrder);
+            Navigator.of(context)
+                .pushNamed(AppRoutes.showBuyOrder, arguments: tmpOrders);
             break;
           }
         case 2:
@@ -38,14 +39,15 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  List<BuyOrder> tmpOrders = buyOrders;
   _navigateAndDisplayAddData(BuildContext context) async {
     // Navigator.push returns a Future that completes after calling
     // Navigator.pop on the Selection Screen.
-    final result =
-        await Navigator.of(context).pushNamed(AppRoutes.addBuyOrder);
+    final result = await Navigator.of(context).pushNamed(AppRoutes.addBuyOrder);
+    tmpOrders.add(result);
     _scaffoldKey.currentState
-    ..removeCurrentSnackBar()
-    ..showSnackBar(SnackBar(content: Text("$result")));
+      ..removeCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text("$result")));
   }
 
   void selectDate() {}
@@ -55,7 +57,9 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      appBar: AppBar(title: Text('Home'),),
+      appBar: AppBar(
+        title: Text('Home'),
+      ),
       body: Padding(
         padding: const EdgeInsets.only(top: 10.0),
         child: SafeArea(
@@ -92,7 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   style: TextStyle(fontSize: 45, fontWeight: FontWeight.w800),
                 ),
                 GestureDetector(
-                  onTap: ()=> {_navigateAndDisplayAddData(context)},
+                  onTap: () => {_navigateAndDisplayAddData(context)},
                   child: Container(
                     decoration: BoxDecoration(
                         color: Colors.black87,
@@ -216,6 +220,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+
 class Destination {
   const Destination(this.title, this.icon, this.color);
   final String title;
