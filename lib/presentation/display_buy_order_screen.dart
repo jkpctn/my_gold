@@ -3,10 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:my_gold/resource/data.dart';
 import '../config/routes.dart';
 
-const TextStyle detailText = TextStyle(
-  fontSize: 25,
-  fontWeight: FontWeight.w800,
-);
+const TextStyle detailText =
+    TextStyle(fontSize: 25, fontWeight: FontWeight.w800, color: Colors.black87);
 const TextStyle decorationText =
     TextStyle(fontSize: 25, fontWeight: FontWeight.w800, color: Colors.white);
 
@@ -61,11 +59,11 @@ class _DisplayBuyOrderScreenState extends State<DisplayBuyOrderScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         key: _scaffoldKey,
-        backgroundColor: Colors.white,
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(100.0),
-          child: AppBar(
-            title: Text('ซื้อเข้า ${tmporders.length} รายการ'),
+        //backgroundColor: Colors.white,
+        appBar: AppBar(
+          title: Text(
+            'ซื้อเข้า ${tmporders.length} รายการ',
+            style: detailText,
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endTop,

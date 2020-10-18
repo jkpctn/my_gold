@@ -48,10 +48,14 @@ class _MyHomePageState extends State<MyHomePage> {
       _scaffoldKey.currentState
         ..removeCurrentSnackBar()
         ..showSnackBar(SnackBar(
+          //backgroundColor: Colors.black45,
           content: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text("เพิ่ม 1 รายการสำเร็จ"),
+              Text(
+                "เพิ่ม 1 รายการสำเร็จ",
+                //style: TextStyle(color: Colors.white),
+              ),
             ],
           ),
         ));
@@ -65,7 +69,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xffeaeaea),
+      //backgroundColor: Color(0xffeaeaea),
       key: _scaffoldKey,
       appBar: AppBar(
         title: Text('Home'),
@@ -79,27 +83,66 @@ class _MyHomePageState extends State<MyHomePage> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text(
-                  'วันที่',
-                  style: TextStyle(fontSize: 45, fontWeight: FontWeight.w800),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: <Widget>[
-                    Container(
-                      color: Colors.black12,
-                      child: Text(
-                        '$date',
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(24),
+                    //color: Color(0xff39383b),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: <Widget>[
+                      Text(
+                        'วันที่',
                         style: TextStyle(
-                            fontSize: 30, fontWeight: FontWeight.w600),
+                            fontSize: 45, fontWeight: FontWeight.w800),
                       ),
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.event_available),
-                      color: Colors.black,
-                      onPressed: selectDate,
-                    ),
-                  ],
+                      Container(
+                        child: Text(
+                          '$date',
+                          style: TextStyle(
+                              fontSize: 35, fontWeight: FontWeight.w600),
+                        ),
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.event_available),
+                        color: Colors.white,
+                        onPressed: selectDate,
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(24),
+                    //color: Color(0xff39383b),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        'ราคาทองวันนี้',
+                        style: TextStyle(
+                            fontSize: 45, fontWeight: FontWeight.w800),
+                      ),
+                      Center(
+                        child: Column(
+                          children: <Widget>[
+                            Text(
+                              'ราคาซื้อเข้า  28000 บาท',
+                              style: TextStyle(
+                                  fontSize: 45, fontWeight: FontWeight.w800),
+                            ),
+                            Text(
+                              'ราคาขายออก  28000 บาท',
+                              style: TextStyle(
+                                  fontSize: 45, fontWeight: FontWeight.w800),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 Text(
                   'ซื้อเข้า - ขายออก',
@@ -195,27 +238,35 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.white,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            title: Text('หน้าแรก',
-                style: TextStyle(fontSize: 25, fontWeight: FontWeight.w600)),
+            icon: Icon(
+              Icons.home,
+            ),
+            title: Text('หน้าแรก'),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.assessment),
-            title: Text('สถิติ',
-                style: TextStyle(fontSize: 25, fontWeight: FontWeight.w600)),
+            title: Text('สถิติ'),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            title: Text('คำนวณ',
-                style: TextStyle(fontSize: 25, fontWeight: FontWeight.w600)),
+            title: Text('คำนวณ'),
           )
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.amber[800],
+        selectedItemColor: Colors.deepOrange,
+        unselectedItemColor: Colors.grey[850],
         onTap: _onItemTapped,
+        selectedIconTheme: IconThemeData(color: Colors.red[700]),
+        unselectedIconTheme: IconThemeData(color: Colors.black),
+        unselectedLabelStyle:
+            TextStyle(fontSize: 25, fontWeight: FontWeight.w600),
+        selectedLabelStyle:
+            TextStyle(fontSize: 25, fontWeight: FontWeight.w600),
       ),
+
       // bottomNavigationBar: BottomNavigationBar(
       //   currentIndex: _selectedIndex,
       //   onTap: _onItemTapped,
@@ -230,6 +281,9 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+
+const TextStyle bottomNavText =
+    TextStyle(fontSize: 25, fontWeight: FontWeight.w600, color: Colors.black);
 
 class Destination {
   const Destination(this.title, this.icon, this.color);

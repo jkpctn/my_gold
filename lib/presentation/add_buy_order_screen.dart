@@ -183,16 +183,16 @@ class _AddBuyOrderScreenState extends State<AddBuyOrderScreen> {
                 children: <Widget>[
                   selectButton('0.6 กรัม', 0.6, isSelectedWeight(0.6)),
                   selectButton('1.6 กรัม', 1.6, isSelectedWeight(1.6)),
-                  selectButton('1.9', 1.9, isSelectedWeight(1.9)),
-                  selectButton('3.8', 3.8, isSelectedWeight(3.8)),
+                  selectButton('1.9 กรัม', 1.9, isSelectedWeight(1.9)),
+                  selectButton('3.8 กรัม', 3.8, isSelectedWeight(3.8)),
                 ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  selectButton('7.6 g', 7.6, isSelectedWeight(7.6)),
-                  selectButton('15.2 g', 15.2, isSelectedWeight(15.2)),
-                  selectButton('30.4 g', 30.4, isSelectedWeight(30.4)),
+                  selectButton('7.6 กรัม', 7.6, isSelectedWeight(7.6)),
+                  selectButton('15.2 กรัม', 15.2, isSelectedWeight(15.2)),
+                  selectButton('30.4 กรัม', 30.4, isSelectedWeight(30.4)),
                   RaisedButton(
                     child: Text(
                       'กำหนดเอง',
@@ -262,11 +262,16 @@ class _AddBuyOrderScreenState extends State<AddBuyOrderScreen> {
     return Container(
       //color: isSelectedWeight ? (Colors.blue) : null,
       child: RaisedButton(
-        color: isSelectedWeight ? (Colors.blue) : null,
+        elevation: 8,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(9.0),
+        ),
+        // side: BorderSide(color: Colors.red)),
+        color: isSelectedWeight ? (Colors.blue) : Color(0xffF9C449),
         child: Text(
           title,
           style: TextStyle(
-              fontSize: 20,
+              fontSize: 22,
               fontWeight: FontWeight.w800,
               color: isSelectedWeight ? (Colors.white) : Colors.black),
         ),
@@ -284,7 +289,7 @@ class _AddBuyOrderScreenState extends State<AddBuyOrderScreen> {
         child: Text(
           title,
           style: TextStyle(
-              fontSize: 20,
+              fontSize: 22,
               fontWeight: FontWeight.w800,
               color: isSelectedWeight ? (Colors.white) : Colors.black),
         ),
