@@ -7,6 +7,8 @@ const TextStyle detailText = TextStyle(
   fontSize: 25,
   fontWeight: FontWeight.w800,
 );
+const TextStyle decorationText =
+    TextStyle(fontSize: 25, fontWeight: FontWeight.w800, color: Colors.white);
 
 class DisplayBuyOrderScreen extends StatefulWidget {
   final orders;
@@ -33,13 +35,26 @@ class _DisplayBuyOrderScreenState extends State<DisplayBuyOrderScreen> {
     // Navigator.pop on the Selection Screen.
     final result = await Navigator.of(context)
         .pushNamed(AppRoutes.editBuyOrder, arguments: tmporders[index]);
+    setState(() {
+      if (result != null) {
+        tmporders[index] = result;
+        _scaffoldKey.currentState
+          ..removeCurrentSnackBar()
+          ..showSnackBar(SnackBar(
+            content: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("แก้ไข 1 รายการสำเร็จ"),
+              ],
+            ),
+          ));
+      }
+    });
+
     //*need
     // setState(() {
     //   tmporders.add(result);
     // });
-    _scaffoldKey.currentState
-      ..removeCurrentSnackBar()
-      ..showSnackBar(SnackBar(content: Text("$result")));
   }
 
   @override
@@ -47,8 +62,11 @@ class _DisplayBuyOrderScreenState extends State<DisplayBuyOrderScreen> {
     return Scaffold(
         key: _scaffoldKey,
         backgroundColor: Colors.white,
-        appBar: AppBar(
-          title: Text('ซื้อเข้า ${data.length} รายการ'),
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(100.0),
+          child: AppBar(
+            title: Text('ซื้อเข้า ${tmporders.length} รายการ'),
+          ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
         floatingActionButton: Container(
@@ -175,10 +193,11 @@ class _DisplayBuyOrderScreenState extends State<DisplayBuyOrderScreen> {
                                   width: 140,
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(24),
-                                      gradient: LinearGradient(
-                                          colors: [Colors.orange, Colors.red],
-                                          begin: Alignment.topLeft,
-                                          end: Alignment.bottomRight),
+                                      // gradient: LinearGradient(
+                                      //     colors: [Colors.orange, Colors.red],
+                                      //     begin: Alignment.topLeft,
+                                      //     end: Alignment.bottomRight),
+                                      color: Colors.red,
                                       boxShadow: [
                                         BoxShadow(
                                           color: Colors.red,
@@ -191,11 +210,11 @@ class _DisplayBuyOrderScreenState extends State<DisplayBuyOrderScreen> {
                                     children: [
                                       Text(
                                         'ราคาทองรูปพรรณ',
-                                        style: detailText,
+                                        style: decorationText,
                                       ),
                                       Text(
                                         '${tmporders[index].price.toInt()}   บาท',
-                                        style: detailText,
+                                        style: decorationText,
                                       )
                                     ],
                                   ))

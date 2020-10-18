@@ -17,9 +17,9 @@ class SellOrder {
 }
 
 List<BuyOrder> buyOrders = [
-  BuyOrder(2000, 10, 70, 200),
-  BuyOrder(3000, 20, 10, 2100),
-  BuyOrder(4000, 310, 96.5, 2002),
+  BuyOrder(28000, 10, 70, 0),
+  BuyOrder(26000, 20, 10, 0),
+  BuyOrder(25000, 310, 96.5, 0),
 ];
 List<Map> data = [
   {

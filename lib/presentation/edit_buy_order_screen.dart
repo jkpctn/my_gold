@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:my_gold/resource/data.dart';
 import 'package:numberpicker/numberpicker.dart';
+import 'package:my_gold/presentation/calculate_function.dart';
+import 'package:my_gold/presentation/style.dart';
 
 const header_textstyle = TextStyle(fontSize: 45, fontWeight: FontWeight.w800);
 const button_textstyle = TextStyle(fontSize: 5, fontWeight: FontWeight.w800);
@@ -17,15 +19,22 @@ class EditBuyOrderScreen extends StatefulWidget {
 class _EditBuyOrderScreenState extends State<EditBuyOrderScreen> {
   double goldPrice;
   double weight;
-  double currentGoldPercentage;
+  double goldPercentage;
   double price;
   @override
   void initState() {
     super.initState();
     goldPrice = widget.targetBuyOrder.goldPrice;
     weight = widget.targetBuyOrder.weight;
-    currentGoldPercentage = widget.targetBuyOrder.goldPercentage;
+    goldPercentage = widget.targetBuyOrder.goldPercentage;
     price = widget.targetBuyOrder.price;
+  }
+
+  @override
+  void setState(fn) {
+    // TODO: implement setState
+    super.setState(fn);
+    price = calculateBuyingPrice(goldPrice, weight, goldPercentage);
   }
 
   void changeWeight(double tappedWeight) {
@@ -36,7 +45,7 @@ class _EditBuyOrderScreenState extends State<EditBuyOrderScreen> {
 
   void changeGoldPercentage(double tappedWeight) {
     debugPrint('w $weight tap $tappedWeight');
-    currentGoldPercentage = tappedWeight;
+    goldPercentage = tappedWeight;
     setState(() {});
   }
 
@@ -49,15 +58,14 @@ class _EditBuyOrderScreenState extends State<EditBuyOrderScreen> {
   }
 
   bool isSelectedGoldPercentage(double buttonPercentage) {
-    if (buttonPercentage == currentGoldPercentage) {
+    if (buttonPercentage == goldPercentage) {
       return true;
     } else
       return false;
   }
 
   void editBuyOrder() {
-    Navigator.pop(
-        context, BuyOrder(goldPrice, weight, currentGoldPercentage, price));
+    Navigator.pop(context, BuyOrder(goldPrice, weight, goldPercentage, price));
   }
 
   void _showCustomWeight() {
@@ -85,10 +93,10 @@ class _EditBuyOrderScreenState extends State<EditBuyOrderScreen> {
             minValue: 0,
             maxValue: 100,
             title: new Text("Pick new weight"),
-            initialDoubleValue: currentGoldPercentage,
+            initialDoubleValue: goldPercentage,
           );
         }).then((value) => {
-          if (value != null) {setState(() => currentGoldPercentage = value)}
+          if (value != null) {setState(() => goldPercentage = value)}
         });
   }
 
@@ -97,7 +105,8 @@ class _EditBuyOrderScreenState extends State<EditBuyOrderScreen> {
     return Scaffold(
       appBar: AppBar(
           title: Text(
-        'New Buy Order',
+        'แก้ไขข้อมูล',
+        style: detailText,
       )),
       body: SafeArea(
         child: Padding(
@@ -134,7 +143,13 @@ class _EditBuyOrderScreenState extends State<EditBuyOrderScreen> {
                   selectButton('15.2 g', 15.2, isSelectedWeight(15.2)),
                   selectButton('30.4 g', 30.4, isSelectedWeight(30.4)),
                   RaisedButton(
-                    child: Text('Custom'),
+                    child: Text(
+                      'กำหนดเอง',
+                      style: isCustomWeight(weight)
+                          ? (smaller_decorationText)
+                          : smaller_detailText,
+                    ),
+                    color: isCustomWeight(weight) ? (Colors.blue) : null,
                     onPressed: () => _showCustomWeight(),
                   )
                 ],
@@ -151,7 +166,15 @@ class _EditBuyOrderScreenState extends State<EditBuyOrderScreen> {
                   selectGoldButton(
                       '96.5 %', 96.5, isSelectedGoldPercentage(96.5)),
                   RaisedButton(
-                    child: Text('Custom'),
+                    child: Text(
+                      'กำหนดเอง',
+                      style: isCustomGoldPercentage(goldPercentage)
+                          ? (smaller_decorationText)
+                          : smaller_detailText,
+                    ),
+                    color: isCustomGoldPercentage(goldPercentage)
+                        ? (Colors.blue)
+                        : null,
                     onPressed: () => _showCustomGoldPercentage(),
                   )
                 ],
@@ -162,15 +185,19 @@ class _EditBuyOrderScreenState extends State<EditBuyOrderScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  orderCard(weight, currentGoldPercentage, goldPrice, price),
+                  orderCard(weight, goldPercentage, goldPrice, price),
                 ],
               ),
               SizedBox(
                 height: 50,
               ),
               Center(
-                child:
-                    RaisedButton(child: Text('Save'), onPressed: editBuyOrder),
+                child: RaisedButton(
+                    child: Text(
+                      'บันทึก',
+                      style: detailText,
+                    ),
+                    onPressed: editBuyOrder),
               )
             ],
           ),
@@ -188,9 +215,9 @@ class _EditBuyOrderScreenState extends State<EditBuyOrderScreen> {
         child: Text(
           title,
           style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.w800,
-          ),
+              fontSize: 20,
+              fontWeight: FontWeight.w800,
+              color: isSelectedWeight ? (Colors.white) : Colors.black),
         ),
         onPressed: () => changeWeight(weightGrams),
       ),
@@ -206,9 +233,9 @@ class _EditBuyOrderScreenState extends State<EditBuyOrderScreen> {
         child: Text(
           title,
           style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.w800,
-          ),
+              fontSize: 20,
+              fontWeight: FontWeight.w800,
+              color: isSelectedWeight ? (Colors.white) : Colors.black),
         ),
         onPressed: () => changeGoldPercentage(weightGrams),
       ),
@@ -306,10 +333,11 @@ Container orderCard(
                   width: 120,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(24),
-                      gradient: LinearGradient(
-                          colors: [Colors.orange, Colors.red],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight),
+                      // gradient: LinearGradient(
+                      //     colors: [Colors.orange, Colors.red],
+                      //     begin: Alignment.topLeft,
+                      //     end: Alignment.bottomRight),
+                      color: Colors.red,
                       boxShadow: [
                         BoxShadow(
                           color: Colors.red,
@@ -320,13 +348,10 @@ Container orderCard(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      Text('ราคาทองรูปพรรณ', style: smaller_decorationText),
                       Text(
-                        'ราคาทองรูปพรรณ',
-                        style: detailText,
-                      ),
-                      Text(
-                        '${price.toInt()}   บาท',
-                        style: detailText,
+                        '${price.toStringAsFixed(2)}   บาท',
+                        style: smaller_decorationText,
                       )
                     ],
                   ))

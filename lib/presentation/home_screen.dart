@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:my_gold/config/routes.dart';
-import 'package:my_gold/presentation/display_buy_order_screen.dart';
 import 'package:my_gold/resource/data.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -39,15 +38,25 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  List<BuyOrder> tmpOrders = buyOrders;
+  List<BuyOrder> tmpOrders = [];
   _navigateAndDisplayAddData(BuildContext context) async {
     // Navigator.push returns a Future that completes after calling
     // Navigator.pop on the Selection Screen.
     final result = await Navigator.of(context).pushNamed(AppRoutes.addBuyOrder);
-    tmpOrders.add(result);
-    _scaffoldKey.currentState
-      ..removeCurrentSnackBar()
-      ..showSnackBar(SnackBar(content: Text("$result")));
+    if (result != null) {
+      tmpOrders.add(result);
+      _scaffoldKey.currentState
+        ..removeCurrentSnackBar()
+        ..showSnackBar(SnackBar(
+          content: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text("เพิ่ม 1 รายการสำเร็จ"),
+            ],
+          ),
+        ));
+    }
+    setState(() {});
   }
 
   void selectDate() {}
@@ -56,6 +65,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xffeaeaea),
       key: _scaffoldKey,
       appBar: AppBar(
         title: Text('Home'),
@@ -127,7 +137,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     color: Colors.white),
                               ),
                               Text(
-                                '0 items',
+                                '${tmpOrders.length} items',
                                 style: TextStyle(
                                     fontSize: 30,
                                     fontWeight: FontWeight.w600,
