@@ -20,8 +20,6 @@ class _AddBuyOrderScreenState extends State<AddBuyOrderScreen> {
   double weight = 0.0;
   double goldPercentage = 0;
   double price = 0;
-  bool displayAlertWeight = false;
-  bool disolayAlertPercentage = false;
   @override
   void setState(fn) {
     // TODO: implement setState
@@ -30,6 +28,12 @@ class _AddBuyOrderScreenState extends State<AddBuyOrderScreen> {
   }
 
   void changeWeight(double tappedWeight) {
+    debugPrint('w $weight tap $tappedWeight');
+    weight = tappedWeight;
+    setState(() {});
+  }
+
+  void change(double tappedWeight) {
     debugPrint('w $weight tap $tappedWeight');
     weight = tappedWeight;
     setState(() {});
@@ -160,23 +164,16 @@ class _AddBuyOrderScreenState extends State<AddBuyOrderScreen> {
                 'ราคาซื้อเข้า',
                 style: header_textstyle,
               ),
-              Text(
-                '28000',
-                style: TextStyle(fontSize: 30),
-              ),
               Row(
-                children: [
-                  Text(
-                    'น้ำหนักทอง ',
-                    style: TextStyle(fontSize: 45, fontWeight: FontWeight.w800),
-                  ),
-                  if (displayAlertWeight)
-                    Text('*เลือกอันนี้ด้วย*',
-                        style: TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.w800,
-                            color: Colors.red))
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  selectPrice('Lastest',27800,true),
+                  
                 ],
+              ),
+              Text(
+                'น้ำหนักทอง ',
+                style: TextStyle(fontSize: 45, fontWeight: FontWeight.w800),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -234,18 +231,18 @@ class _AddBuyOrderScreenState extends State<AddBuyOrderScreen> {
                   )
                 ],
               ),
-              SizedBox(
-                height: 50,
-              ),
+              // SizedBox(
+              //   height: 50,
+              // ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   orderCard(weight, goldPercentage, goldPrice, price),
                 ],
               ),
-              SizedBox(
-                height: 50,
-              ),
+              // SizedBox(
+              //   height: 50,
+              // ),
               Center(
                 child: RaisedButton(
                     child: Text(
@@ -257,6 +254,40 @@ class _AddBuyOrderScreenState extends State<AddBuyOrderScreen> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Container selectPrice(
+      String title, double price, bool isSelected) {
+    return Container(
+      
+      //color: isSelectedWeight ? (Colors.blue) : null,
+      child: RaisedButton(
+        elevation: btnElevation,
+        shape: selectButtonShape,
+        // side: BorderSide(color: Colors.red)),
+        color: isSelected ? selectedBtn : unSelectedBtn,
+        child: Column(
+          children: <Widget>[
+            
+            Text(
+              title,
+              style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w800,
+                  color: isSelected ? (Colors.white) : Colors.black),
+            ),
+            Text(
+              price.toString(),
+              style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w800,
+                  color: isSelected ? (Colors.white) : Colors.black),
+            ),
+          ],
+        ),
+        onPressed: () => null,//changeWeight(price),
       ),
     );
   }

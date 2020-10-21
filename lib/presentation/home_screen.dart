@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:my_gold/config/routes.dart';
+import 'package:my_gold/presentation/style.dart';
 import 'package:my_gold/resource/data.dart';
 import 'package:my_gold/presentation/gold_scraping.dart';
 class MyHomePage extends StatefulWidget {
@@ -165,7 +166,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   onTap: () => {_navigateAndDisplayAddData(context)},
                   child: Container(
                     decoration: BoxDecoration(
-                        color: Colors.black87,
+                        color: Colors.white24,
                         borderRadius: BorderRadius.circular(20.0)),
                     child: Row(mainAxisAlignment: MainAxisAlignment.start,
                         //crossAxisAlignment: CrossAxisAlignment.start,
@@ -207,7 +208,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 SizedBox(height: 20),
                 Container(
                   decoration: BoxDecoration(
-                      color: Colors.black87,
+                      color: Colors.white24,
                       borderRadius: BorderRadius.circular(20.0)),
                   child: Row(mainAxisAlignment: MainAxisAlignment.start,
                       //crossAxisAlignment: CrossAxisAlignment.start,

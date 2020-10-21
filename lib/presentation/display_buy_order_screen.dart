@@ -5,6 +5,8 @@ import '../config/routes.dart';
 
 const TextStyle detailText =
     TextStyle(fontSize: 25, fontWeight: FontWeight.w800, color: Colors.black87);
+    const TextStyle detailTextnoColor =
+    TextStyle(fontSize: 25, fontWeight: FontWeight.w800,);
 const TextStyle decorationText =
     TextStyle(fontSize: 25, fontWeight: FontWeight.w800, color: Colors.white);
 
@@ -63,7 +65,7 @@ class _DisplayBuyOrderScreenState extends State<DisplayBuyOrderScreen> {
         appBar: AppBar(
           title: Text(
             'ซื้อเข้า ${tmporders.length} รายการ',
-            style: detailText,
+            style: detailTextnoColor,
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
