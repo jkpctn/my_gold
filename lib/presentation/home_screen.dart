@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:my_gold/config/routes.dart';
 import 'package:my_gold/resource/data.dart';
-
+import 'package:my_gold/presentation/gold_scraping.dart';
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key}) : super(key: key);
 
@@ -13,7 +13,20 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
   String date = '20 กันยายน 2563';
-
+  String buyPrice = '';
+  String sellPrice = '';
+@override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getBuyPrice().then((String result) => setState(() {
+      buyPrice = result;
+    }));
+    getSellPrice().then((String result) => setState(() {
+      sellPrice = result;
+    }));
+    
+  }
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -129,12 +142,12 @@ class _MyHomePageState extends State<MyHomePage> {
                         child: Column(
                           children: <Widget>[
                             Text(
-                              'ราคาซื้อเข้า  28000 บาท',
+                              'ราคาซื้อเข้า  $buyPrice บาท',
                               style: TextStyle(
                                   fontSize: 45, fontWeight: FontWeight.w800),
                             ),
                             Text(
-                              'ราคาขายออก  28000 บาท',
+                              'ราคาขายออก  $sellPrice บาท',
                               style: TextStyle(
                                   fontSize: 45, fontWeight: FontWeight.w800),
                             ),

@@ -188,7 +188,7 @@ class _DisplayBuyOrderScreenState extends State<DisplayBuyOrderScreen> {
                                   )),
                               Container(
                                   height: 90,
-                                  width: 140,
+                                  width: 130,
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(24),
                                       // gradient: LinearGradient(
