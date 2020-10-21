@@ -194,13 +194,15 @@ class _AddBuyOrderScreenState extends State<AddBuyOrderScreen> {
                   selectButton('15.2 กรัม', 15.2, isSelectedWeight(15.2)),
                   selectButton('30.4 กรัม', 30.4, isSelectedWeight(30.4)),
                   RaisedButton(
+                    elevation: btnElevation,
+                    shape: selectButtonShape,
                     child: Text(
                       'กำหนดเอง',
                       style: isCustomWeight(weight)
                           ? (smaller_decorationText)
                           : smaller_detailText,
                     ),
-                    color: isCustomWeight(weight) ? (Colors.blue) : null,
+                    color: isCustomWeight(weight) ? selectedBtn : unSelectedBtn,
                     onPressed: () => _showCustomWeight(),
                   )
                 ],
@@ -217,6 +219,8 @@ class _AddBuyOrderScreenState extends State<AddBuyOrderScreen> {
                   selectGoldButton(
                       '96.5 %', 96.5, isSelectedGoldPercentage(96.5)),
                   RaisedButton(
+                    elevation: btnElevation,
+                    shape: selectButtonShape,
                     child: Text(
                       'กำหนดเอง',
                       style: isCustomGoldPercentage(goldPercentage)
@@ -224,8 +228,8 @@ class _AddBuyOrderScreenState extends State<AddBuyOrderScreen> {
                           : smaller_detailText,
                     ),
                     color: isCustomGoldPercentage(goldPercentage)
-                        ? (Colors.blue)
-                        : null,
+                        ? selectedBtn
+                        : unSelectedBtn,
                     onPressed: () => _showCustomGoldPercentage(),
                   )
                 ],
@@ -262,12 +266,10 @@ class _AddBuyOrderScreenState extends State<AddBuyOrderScreen> {
     return Container(
       //color: isSelectedWeight ? (Colors.blue) : null,
       child: RaisedButton(
-        elevation: 8,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(9.0),
-        ),
+        elevation: btnElevation,
+        shape: selectButtonShape,
         // side: BorderSide(color: Colors.red)),
-        color: isSelectedWeight ? (Colors.blue) : Color(0xffF9C449),
+        color: isSelectedWeight ? selectedBtn : unSelectedBtn,
         child: Text(
           title,
           style: TextStyle(
@@ -285,7 +287,9 @@ class _AddBuyOrderScreenState extends State<AddBuyOrderScreen> {
     return Container(
       //color: isSelectedWeight ? (Colors.blue) : null,
       child: RaisedButton(
-        color: isSelectedWeight ? (Colors.blue) : null,
+        elevation: btnElevation,
+        shape: selectButtonShape,
+        color: isSelectedWeight ? selectedBtn : unSelectedBtn,
         child: Text(
           title,
           style: TextStyle(

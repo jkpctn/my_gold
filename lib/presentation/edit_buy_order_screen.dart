@@ -143,13 +143,15 @@ class _EditBuyOrderScreenState extends State<EditBuyOrderScreen> {
                   selectButton('15.2 g', 15.2, isSelectedWeight(15.2)),
                   selectButton('30.4 g', 30.4, isSelectedWeight(30.4)),
                   RaisedButton(
+                    elevation: btnElevation,
+                    shape: selectButtonShape,
                     child: Text(
                       'กำหนดเอง',
                       style: isCustomWeight(weight)
                           ? (smaller_decorationText)
                           : smaller_detailText,
                     ),
-                    color: isCustomWeight(weight) ? (Colors.blue) : null,
+                    color: isCustomWeight(weight) ? selectedBtn : unSelectedBtn,
                     onPressed: () => _showCustomWeight(),
                   )
                 ],
@@ -166,6 +168,8 @@ class _EditBuyOrderScreenState extends State<EditBuyOrderScreen> {
                   selectGoldButton(
                       '96.5 %', 96.5, isSelectedGoldPercentage(96.5)),
                   RaisedButton(
+                    elevation: btnElevation,
+                    shape: selectButtonShape,
                     child: Text(
                       'กำหนดเอง',
                       style: isCustomGoldPercentage(goldPercentage)
@@ -173,8 +177,8 @@ class _EditBuyOrderScreenState extends State<EditBuyOrderScreen> {
                           : smaller_detailText,
                     ),
                     color: isCustomGoldPercentage(goldPercentage)
-                        ? (Colors.blue)
-                        : null,
+                        ? selectedBtn
+                        : unSelectedBtn,
                     onPressed: () => _showCustomGoldPercentage(),
                   )
                 ],
@@ -211,7 +215,9 @@ class _EditBuyOrderScreenState extends State<EditBuyOrderScreen> {
     return Container(
       //color: isSelectedWeight ? (Colors.blue) : null,
       child: RaisedButton(
-        color: isSelectedWeight ? (Colors.blue) : null,
+        elevation: btnElevation,
+        shape: selectButtonShape,
+        color: isSelectedWeight ? selectedBtn : unSelectedBtn,
         child: Text(
           title,
           style: TextStyle(
@@ -229,7 +235,9 @@ class _EditBuyOrderScreenState extends State<EditBuyOrderScreen> {
     return Container(
       //color: isSelectedWeight ? (Colors.blue) : null,
       child: RaisedButton(
-        color: isSelectedWeight ? (Colors.blue) : null,
+        elevation: btnElevation,
+        shape: selectButtonShape,
+        color: isSelectedWeight ? selectedBtn : unSelectedBtn,
         child: Text(
           title,
           style: TextStyle(
