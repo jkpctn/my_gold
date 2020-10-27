@@ -5,6 +5,9 @@ import 'package:my_gold/resource/data.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:my_gold/presentation/style.dart';
 
+import '../gold_price_bloc.dart';
+import 'gold_scraping.dart';
+
 const header_textstyle = TextStyle(fontSize: 45, fontWeight: FontWeight.w800);
 const button_textstyle = TextStyle(fontSize: 5, fontWeight: FontWeight.w800);
 const TextStyle detailText =
@@ -16,10 +19,22 @@ class AddBuyOrderScreen extends StatefulWidget {
 }
 
 class _AddBuyOrderScreenState extends State<AddBuyOrderScreen> {
-  double goldPrice = 28000;
+  double goldPrice = 0;
   double weight = 0.0;
   double goldPercentage = 0;
   double price = 0;
+  double customPrice = -1;
+  double buyPrice = 0;
+  final goldPriceField = TextEditingController();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getBuyPrice().then((String result) => setState(() {
+          buyPrice = double.parse(result.replaceAll(',', ''));
+        }));
+  }
+
   @override
   void setState(fn) {
     // TODO: implement setState
@@ -28,21 +43,74 @@ class _AddBuyOrderScreenState extends State<AddBuyOrderScreen> {
   }
 
   void changeWeight(double tappedWeight) {
-    debugPrint('w $weight tap $tappedWeight');
+    //debugPrint('w $weight tap $tappedWeight');
     weight = tappedWeight;
     setState(() {});
   }
 
-  void change(double tappedWeight) {
-    debugPrint('w $weight tap $tappedWeight');
-    weight = tappedWeight;
+  void changePrice(double tappedPrice) {
+    //debugPrint('customPrice $customPrice');
+    goldPrice = tappedPrice;
+    setState(() {});
+  }
+
+  void confirmCustomGoldPrice(String inputPrice) {
+    goldPrice = double.parse(inputPrice);
+    customPrice = goldPrice;
+    Navigator.of(context).pop();
+    debugPrint(inputPrice);
+    setState(() {});
+  }
+
+  void changeCustomPrice(double tappedPrice) {
+    debugPrint('customPrice $customPrice');
+    customPrice = tappedPrice;
+    goldPrice = tappedPrice;
+    showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+              title: Text(
+                "กำหนดราคาซื้อเข้า",
+                style: detailText,
+              ),
+              content: TextFormField(
+                controller: goldPriceField,
+                keyboardType: TextInputType.number,
+                style: detailText,
+                onFieldSubmitted: (inputPrice) {
+                  confirmCustomGoldPrice(inputPrice);
+                },
+              ),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('ยืนยัน'),
+                  onPressed: () {
+                    confirmCustomGoldPrice(goldPriceField.text);
+                  },
+                ),
+                FlatButton(
+                  child: Text('ยกเลิก'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
+            ));
     setState(() {});
   }
 
   void changeGoldPercentage(double tappedWeight) {
-    debugPrint('w $weight tap $tappedWeight');
+    //debugPrint('w $weight tap $tappedWeight');
     goldPercentage = tappedWeight;
     setState(() {});
+  }
+
+  bool isSelectedPrice(double buttonPrice) {
+    if (buttonPrice == goldPrice) {
+      //debugPrint('$buttonweight,$weight');
+      return true;
+    } else
+      return false;
   }
 
   bool isSelectedWeight(double buttonweight) {
@@ -108,8 +176,8 @@ class _AddBuyOrderScreenState extends State<AddBuyOrderScreen> {
         },
       );
     } else
-      Navigator.pop(
-          context, BuyOrder(goldPrice, weight, goldPercentage, price));
+      bloc.changeBuyPrice(goldPrice);
+    Navigator.pop(context, BuyOrder(goldPrice, weight, goldPercentage, price));
     setState(() {});
   }
 
@@ -148,120 +216,222 @@ class _AddBuyOrderScreenState extends State<AddBuyOrderScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
           title: Text(
         'เพิ่มรายการซื้อเข้า',
         style: TextStyle(fontSize: 30, fontWeight: FontWeight.w800),
       )),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                'ราคาซื้อเข้า',
-                style: header_textstyle,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  selectPrice('Lastest',27800,true),
-                  
-                ],
-              ),
-              Text(
-                'น้ำหนักทอง ',
-                style: TextStyle(fontSize: 45, fontWeight: FontWeight.w800),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  selectButton('0.6 กรัม', 0.6, isSelectedWeight(0.6)),
-                  selectButton('1.6 กรัม', 1.6, isSelectedWeight(1.6)),
-                  selectButton('1.9 กรัม', 1.9, isSelectedWeight(1.9)),
-                  selectButton('3.8 กรัม', 3.8, isSelectedWeight(3.8)),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  selectButton('7.6 กรัม', 7.6, isSelectedWeight(7.6)),
-                  selectButton('15.2 กรัม', 15.2, isSelectedWeight(15.2)),
-                  selectButton('30.4 กรัม', 30.4, isSelectedWeight(30.4)),
-                  RaisedButton(
-                    elevation: btnElevation,
-                    shape: selectButtonShape,
-                    child: Text(
-                      'กำหนดเอง',
-                      style: isCustomWeight(weight)
-                          ? (smaller_decorationText)
-                          : smaller_detailText,
+      body: StreamBuilder(
+          initialData: bloc.goldPrice,
+          stream: bloc.getStream,
+          builder: (context, snapshot) {
+            return SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      'ราคาซื้อเข้า',
+                      style: header_textstyle,
                     ),
-                    color: isCustomWeight(weight) ? selectedBtn : unSelectedBtn,
-                    onPressed: () => _showCustomWeight(),
-                  )
-                ],
-              ),
-              Text(
-                'เปอร์เซ็นทอง',
-                style: TextStyle(fontSize: 45, fontWeight: FontWeight.w800),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  selectGoldButton('70 %', 70, isSelectedGoldPercentage(70)),
-                  selectGoldButton('80 %', 80, isSelectedGoldPercentage(80)),
-                  selectGoldButton(
-                      '96.5 %', 96.5, isSelectedGoldPercentage(96.5)),
-                  RaisedButton(
-                    elevation: btnElevation,
-                    shape: selectButtonShape,
-                    child: Text(
-                      'กำหนดเอง',
-                      style: isCustomGoldPercentage(goldPercentage)
-                          ? (smaller_decorationText)
-                          : smaller_detailText,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        selectPrice('ราคาปัจจุบัน', buyPrice,
+                            isSelectedPrice(buyPrice)),
+                        // selectPrice('ราคาล่าสุด', snapshot.data.buying,
+                        //     isSelectedPrice(snapshot.data.buying)),
+                        Container(
+                          height: 58,
+                          //color: isSelectedWeight ? (Colors.blue) : null,
+                          child: RaisedButton(
+                            elevation: btnElevation,
+                            shape: selectButtonShape,
+                            // side: BorderSide(color: Colors.red)),
+                            color: (snapshot.data.buying == goldPrice)
+                                ? selectedBtn
+                                : unSelectedBtn,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Text(
+                                  'ราคาล่าสุด',
+                                  style: TextStyle(
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.w800,
+                                      color: (snapshot.data.buying == goldPrice)
+                                          ? (Colors.white)
+                                          : Colors.black),
+                                ),
+                                if (snapshot.data.buying == 0)
+                                  Text(
+                                    '-',
+                                    style: TextStyle(
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.w800,
+                                        color:
+                                            (snapshot.data.buying == goldPrice)
+                                                ? (Colors.white)
+                                                : Colors.black),
+                                  ),
+                                if (snapshot.data.buying != 0)
+                                  Text(
+                                    '${snapshot.data.buying}',
+                                    style: TextStyle(
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.w800,
+                                        color:
+                                            (snapshot.data.buying == goldPrice)
+                                                ? (Colors.white)
+                                                : Colors.black),
+                                  ),
+                              ],
+                            ),
+                            onPressed: () => {
+                              changePrice(snapshot.data.buying)
+                            }, //changeWeight(price),
+                          ),
+                        ),
+                        Container(
+                          height: 58,
+                          //color: isSelectedWeight ? (Colors.blue) : null,
+                          child: RaisedButton(
+                            elevation: btnElevation,
+                            shape: selectButtonShape,
+                            // side: BorderSide(color: Colors.red)),
+                            color: customPrice == goldPrice
+                                ? selectedBtn
+                                : unSelectedBtn,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Text(
+                                  'กำหนดเอง',
+                                  style: TextStyle(
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.w800,
+                                      color: customPrice == goldPrice
+                                          ? (Colors.white)
+                                          : Colors.black),
+                                ),
+                                if (customPrice != -1)
+                                  Text(
+                                    customPrice.toString(),
+                                    style: TextStyle(
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.w800,
+                                        color: customPrice == goldPrice
+                                            ? (Colors.white)
+                                            : Colors.black),
+                                  ),
+                              ],
+                            ),
+                            onPressed: () => {
+                              changeCustomPrice(customPrice)
+                            }, //changeWeight(price),
+                          ),
+                        ),
+                      ],
                     ),
-                    color: isCustomGoldPercentage(goldPercentage)
-                        ? selectedBtn
-                        : unSelectedBtn,
-                    onPressed: () => _showCustomGoldPercentage(),
-                  )
-                ],
-              ),
-              // SizedBox(
-              //   height: 50,
-              // ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  orderCard(weight, goldPercentage, goldPrice, price),
-                ],
-              ),
-              // SizedBox(
-              //   height: 50,
-              // ),
-              Center(
-                child: RaisedButton(
-                    child: Text(
-                      'เพิ่ม',
-                      style: detailText,
+                    Text(
+                      'น้ำหนักทอง ',
+                      style:
+                          TextStyle(fontSize: 45, fontWeight: FontWeight.w800),
                     ),
-                    onPressed: _addBuyOrder),
-              )
-            ],
-          ),
-        ),
-      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        selectButton('0.6 กรัม', 0.6, isSelectedWeight(0.6)),
+                        selectButton('1.6 กรัม', 1.6, isSelectedWeight(1.6)),
+                        selectButton('1.9 กรัม', 1.9, isSelectedWeight(1.9)),
+                        selectButton('3.8 กรัม', 3.8, isSelectedWeight(3.8)),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        selectButton('7.6 กรัม', 7.6, isSelectedWeight(7.6)),
+                        selectButton('15.2 กรัม', 15.2, isSelectedWeight(15.2)),
+                        selectButton('30.4 กรัม', 30.4, isSelectedWeight(30.4)),
+                        RaisedButton(
+                          elevation: btnElevation,
+                          shape: selectButtonShape,
+                          child: Text(
+                            'กำหนดเอง',
+                            style: isCustomWeight(weight)
+                                ? (smaller_decorationText)
+                                : smaller_detailTextBlack,
+                          ),
+                          color: isCustomWeight(weight)
+                              ? selectedBtn
+                              : unSelectedBtn,
+                          onPressed: () => _showCustomWeight(),
+                        )
+                      ],
+                    ),
+                    Text(
+                      'เปอร์เซ็นทอง',
+                      style:
+                          TextStyle(fontSize: 45, fontWeight: FontWeight.w800),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        selectGoldButton(
+                            '70 %', 70, isSelectedGoldPercentage(70)),
+                        selectGoldButton(
+                            '80 %', 80, isSelectedGoldPercentage(80)),
+                        selectGoldButton(
+                            '96.5 %', 96.5, isSelectedGoldPercentage(96.5)),
+                        RaisedButton(
+                          elevation: btnElevation,
+                          shape: selectButtonShape,
+                          child: Text(
+                            'กำหนดเอง',
+                            style: isCustomGoldPercentage(goldPercentage)
+                                ? (smaller_decorationText)
+                                : smaller_detailTextBlack,
+                          ),
+                          color: isCustomGoldPercentage(goldPercentage)
+                              ? selectedBtn
+                              : unSelectedBtn,
+                          onPressed: () => _showCustomGoldPercentage(),
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: 50,
+                    ),
+                    Center(
+                        child: orderCard(
+                            weight, goldPercentage, goldPrice, price)),
+                    SizedBox(
+                      height: 50,
+                    ),
+                    Center(
+                      child: RaisedButton(
+                          elevation: btnElevation,
+                          shape: selectButtonShape,
+                          color: unSelectedBtn,
+                          child: Text(
+                            'เพิ่ม',
+                            style: detailTextBlack,
+                          ),
+                          onPressed: _addBuyOrder),
+                    )
+                  ],
+                ),
+              ),
+            );
+          }),
     );
   }
 
-  Container selectPrice(
-      String title, double price, bool isSelected) {
+  Container selectPrice(String title, double price, bool isSelected) {
     return Container(
-      
       //color: isSelectedWeight ? (Colors.blue) : null,
       child: RaisedButton(
         elevation: btnElevation,
@@ -270,7 +440,6 @@ class _AddBuyOrderScreenState extends State<AddBuyOrderScreen> {
         color: isSelected ? selectedBtn : unSelectedBtn,
         child: Column(
           children: <Widget>[
-            
             Text(
               title,
               style: TextStyle(
@@ -287,7 +456,7 @@ class _AddBuyOrderScreenState extends State<AddBuyOrderScreen> {
             ),
           ],
         ),
-        onPressed: () => null,//changeWeight(price),
+        onPressed: () => changePrice(price), //changeWeight(price),
       ),
     );
   }
@@ -338,7 +507,7 @@ Container orderCard(
     double weightGrams, double goldPercentage, double goldPrice, double price) {
   double _padding = 20;
   const TextStyle detailText =
-      TextStyle(fontSize: 20, fontWeight: FontWeight.w800);
+      TextStyle(fontSize: 20, fontWeight: FontWeight.w800, color: Colors.black);
   return Container(
       height: 150,
       width: 350,
