@@ -42,7 +42,7 @@ class _AddSellOrderScreenState extends State<AddSellOrderScreen> {
   void setState(fn) {
     // TODO: implement setState
     super.setState(fn);
-    price = calculateBuyingPrice(goldPrice, weight, goldPercentage);
+    price = calculateSellingPrice(goldPrice, weight, goldPercentage, makingFee);
   }
 
   void changeWeight(double tappedWeight) {
