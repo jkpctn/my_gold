@@ -27,3 +27,10 @@ const Color unSelectedBtn = Color(0xffF9C449);
 RoundedRectangleBorder selectButtonShape = RoundedRectangleBorder(
   borderRadius: BorderRadius.circular(9.0),
 );
+Divider customDivider(double height) {
+  return Divider(
+    height: height,
+    thickness: 5,
+    color: unSelectedBtn,
+  );
+}

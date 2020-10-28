@@ -13,24 +13,27 @@ const button_textstyle = TextStyle(fontSize: 5, fontWeight: FontWeight.w800);
 const TextStyle detailText =
     TextStyle(fontSize: 20, fontWeight: FontWeight.w800);
 
-class AddBuyOrderScreen extends StatefulWidget {
+class AddSellOrderScreen extends StatefulWidget {
   @override
-  _AddBuyOrderScreenState createState() => _AddBuyOrderScreenState();
+  _AddSellOrderScreenState createState() => _AddSellOrderScreenState();
 }
 
-class _AddBuyOrderScreenState extends State<AddBuyOrderScreen> {
+class _AddSellOrderScreenState extends State<AddSellOrderScreen> {
   double goldPrice = 0;
   double weight = 0.0;
   double goldPercentage = 0;
   double price = 0;
   double customPrice = -1;
   double buyPrice = -2;
+  double makingFee = -1;
+  double customFee = 0;
   final goldPriceField = TextEditingController();
+  final makingFeeField = TextEditingController();
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    getBuyPrice().then((String result) => setState(() {
+    getSellPrice().then((String result) => setState(() {
           buyPrice = double.parse(result.replaceAll(',', ''));
         }));
   }
@@ -45,6 +48,12 @@ class _AddBuyOrderScreenState extends State<AddBuyOrderScreen> {
   void changeWeight(double tappedWeight) {
     //debugPrint('w $weight tap $tappedWeight');
     weight = tappedWeight;
+    setState(() {});
+  }
+
+  void changeFee(double tappedFee) {
+    //debugPrint('w $weight tap $tappedWeight');
+    makingFee = tappedFee;
     setState(() {});
   }
 
@@ -70,7 +79,7 @@ class _AddBuyOrderScreenState extends State<AddBuyOrderScreen> {
         context: context,
         builder: (_) => AlertDialog(
               title: Text(
-                "กำหนดราคาซื้อเข้า",
+                "กำหนดราคาขายออก",
                 style: detailText,
               ),
               content: TextFormField(
@@ -99,6 +108,51 @@ class _AddBuyOrderScreenState extends State<AddBuyOrderScreen> {
     setState(() {});
   }
 
+  void confirmCustomFee(String inputFee) {
+    makingFee = double.parse(inputFee);
+    customFee = makingFee;
+    Navigator.of(context).pop();
+    debugPrint(inputFee);
+    setState(() {});
+  }
+
+  void changeCustomFee(double tappedFee) {
+    debugPrint('customFee $tappedFee');
+    customFee = tappedFee;
+    makingFee = tappedFee;
+    showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+              title: Text(
+                "กำหนดค่ากำเหน็ด",
+                style: detailText,
+              ),
+              content: TextFormField(
+                controller: makingFeeField,
+                keyboardType: TextInputType.number,
+                style: detailText,
+                onFieldSubmitted: (inputPrice) {
+                  confirmCustomFee(inputPrice);
+                },
+              ),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('ยืนยัน'),
+                  onPressed: () {
+                    confirmCustomFee(makingFeeField.text);
+                  },
+                ),
+                FlatButton(
+                  child: Text('ยกเลิก'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
+            ));
+    setState(() {});
+  }
+
   void changeGoldPercentage(double tappedWeight) {
     //debugPrint('w $weight tap $tappedWeight');
     goldPercentage = tappedWeight;
@@ -107,6 +161,14 @@ class _AddBuyOrderScreenState extends State<AddBuyOrderScreen> {
 
   bool isSelectedPrice(double buttonPrice) {
     if (buttonPrice == goldPrice) {
+      //debugPrint('$buttonweight,$weight');
+      return true;
+    } else
+      return false;
+  }
+
+  bool isSelectedFee(double buttonFee) {
+    if (buttonFee == makingFee) {
       //debugPrint('$buttonweight,$weight');
       return true;
     } else
@@ -128,7 +190,7 @@ class _AddBuyOrderScreenState extends State<AddBuyOrderScreen> {
       return false;
   }
 
-  void _addBuyOrder() {
+  void _addSellOrder() {
     if (weight == 0 && goldPercentage == 0) {
       AlertDialog alert = AlertDialog(
         title: Text(
@@ -177,7 +239,8 @@ class _AddBuyOrderScreenState extends State<AddBuyOrderScreen> {
       );
     } else
       bloc.changeBuyPrice(goldPrice);
-    Navigator.pop(context, BuyOrder(goldPrice, weight, goldPercentage, price));
+    Navigator.pop(context,
+        SellOrder(goldPrice, weight, goldPercentage, price, makingFee));
     setState(() {});
   }
 
@@ -219,7 +282,7 @@ class _AddBuyOrderScreenState extends State<AddBuyOrderScreen> {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
           title: Text(
-        'เพิ่มรายการซื้อเข้า',
+        'เพิ่มรายการขายออก',
         style: TextStyle(fontSize: 30, fontWeight: FontWeight.w800),
       )),
       body: StreamBuilder(
@@ -234,7 +297,7 @@ class _AddBuyOrderScreenState extends State<AddBuyOrderScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      'ราคาซื้อเข้า',
+                      'ราคาขายออก',
                       style: header_textstyle,
                     ),
                     Row(
@@ -406,15 +469,42 @@ class _AddBuyOrderScreenState extends State<AddBuyOrderScreen> {
                         )
                       ],
                     ),
-                    SizedBox(
-                      height: 50,
+                    Text(
+                      'ค่ากำเหน็ด',
+                      style:
+                          TextStyle(fontSize: 45, fontWeight: FontWeight.w800),
                     ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        selectFeeButton('300 บาท', 300, isSelectedFee(300)),
+                        selectFeeButton('500 บาท', 500, isSelectedFee(500)),
+                        selectFeeButton('700 บาท', 700, isSelectedFee(700)),
+                        RaisedButton(
+                          elevation: btnElevation,
+                          shape: selectButtonShape,
+                          child: Text(
+                            'กำหนดเอง',
+                            style: customFee == makingFee
+                                ? (smaller_decorationText)
+                                : smaller_detailTextBlack,
+                          ),
+                          color: customFee == makingFee
+                              ? selectedBtn
+                              : unSelectedBtn,
+                          onPressed: () => changeCustomFee(customFee),
+                        )
+                      ],
+                    ),
+                    // SizedBox(
+                    //   height: 50,
+                    // ),
                     Center(
-                        child: orderCard(
-                            weight, goldPercentage, goldPrice, price)),
-                    SizedBox(
-                      height: 50,
-                    ),
+                        child: orderCard(weight, goldPercentage, goldPrice,
+                            price, makingFee)),
+                    // SizedBox(
+                    //   height: 50,
+                    // ),
                     Center(
                       child: RaisedButton(
                           elevation: btnElevation,
@@ -424,7 +514,7 @@ class _AddBuyOrderScreenState extends State<AddBuyOrderScreen> {
                             'เพิ่ม',
                             style: detailTextBlack,
                           ),
-                          onPressed: _addBuyOrder),
+                          onPressed: _addSellOrder),
                     )
                   ],
                 ),
@@ -451,13 +541,14 @@ class _AddBuyOrderScreenState extends State<AddBuyOrderScreen> {
                   fontWeight: FontWeight.w800,
                   color: isSelected ? (Colors.white) : Colors.black),
             ),
-            Text(
-              price.toString(),
-              style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w800,
-                  color: isSelected ? (Colors.white) : Colors.black),
-            ),
+            if (price > 0)
+              Text(
+                price.toString(),
+                style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.w800,
+                    color: isSelected ? (Colors.white) : Colors.black),
+              ),
           ],
         ),
         onPressed: () => changePrice(price), //changeWeight(price),
@@ -505,10 +596,30 @@ class _AddBuyOrderScreenState extends State<AddBuyOrderScreen> {
       ),
     );
   }
+
+  Container selectFeeButton(
+      String title, double weightGrams, bool isSelectedWeight) {
+    return Container(
+      //color: isSelectedWeight ? (Colors.blue) : null,
+      child: RaisedButton(
+        elevation: btnElevation,
+        shape: selectButtonShape,
+        color: isSelectedWeight ? selectedBtn : unSelectedBtn,
+        child: Text(
+          title,
+          style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.w800,
+              color: isSelectedWeight ? (Colors.white) : Colors.black),
+        ),
+        onPressed: () => changeFee(weightGrams),
+      ),
+    );
+  }
 }
 
-Container orderCard(
-    double weightGrams, double goldPercentage, double goldPrice, double price) {
+Container orderCard(double weightGrams, double goldPercentage, double goldPrice,
+    double price, double makingFee) {
   double _padding = 20;
   const TextStyle detailText =
       TextStyle(fontSize: 20, fontWeight: FontWeight.w800, color: Colors.black);
@@ -539,7 +650,7 @@ Container orderCard(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
                       Text(
-                        'ราคาซื้อเข้า',
+                        'ราคาขายออก',
                         style: detailText,
                       ),
                       Text(
@@ -548,6 +659,10 @@ Container orderCard(
                       ),
                       Text(
                         'เปอร์เซ็นทอง',
+                        style: detailText,
+                      ),
+                      Text(
+                        'ค่ากำเหน็ด',
                         style: detailText,
                       )
                     ],
@@ -558,6 +673,10 @@ Container orderCard(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
+                      Text(
+                        ':',
+                        style: detailText,
+                      ),
                       Text(
                         ':',
                         style: detailText,
@@ -588,6 +707,10 @@ Container orderCard(
                       ),
                       Text(
                         '$goldPercentage %',
+                        style: detailText,
+                      ),
+                      Text(
+                        '$makingFee',
                         style: detailText,
                       )
                     ],

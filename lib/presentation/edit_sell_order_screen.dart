@@ -1,38 +1,112 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:my_gold/presentation/calculate_function.dart';
+import 'package:my_gold/presentation/gold_scraping.dart';
 import 'package:my_gold/resource/data.dart';
 import 'package:numberpicker/numberpicker.dart';
+import 'package:my_gold/presentation/calculate_function.dart';
 import 'package:my_gold/presentation/style.dart';
 
 import '../gold_price_bloc.dart';
-import 'gold_scraping.dart';
 
 const header_textstyle = TextStyle(fontSize: 45, fontWeight: FontWeight.w800);
 const button_textstyle = TextStyle(fontSize: 5, fontWeight: FontWeight.w800);
-const TextStyle detailText =
-    TextStyle(fontSize: 20, fontWeight: FontWeight.w800);
 
-class AddBuyOrderScreen extends StatefulWidget {
+class EditSellOrderScreen extends StatefulWidget {
+  final SellOrder targetSellOrder;
+
+  const EditSellOrderScreen({Key key, this.targetSellOrder}) : super(key: key);
+
   @override
-  _AddBuyOrderScreenState createState() => _AddBuyOrderScreenState();
+  _EditSellOrderScreenState createState() => _EditSellOrderScreenState();
 }
 
-class _AddBuyOrderScreenState extends State<AddBuyOrderScreen> {
+class _EditSellOrderScreenState extends State<EditSellOrderScreen> {
   double goldPrice = 0;
   double weight = 0.0;
   double goldPercentage = 0;
   double price = 0;
   double customPrice = -1;
-  double buyPrice = -2;
+  double buyPrice = 0;
+  double makingFee = -1;
+  double customFee = 0;
   final goldPriceField = TextEditingController();
+  final makingFeeField = TextEditingController();
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    getBuyPrice().then((String result) => setState(() {
+    goldPrice = widget.targetSellOrder.goldPrice;
+    weight = widget.targetSellOrder.weight;
+    goldPercentage = widget.targetSellOrder.goldPercentage;
+    price = widget.targetSellOrder.price;
+    makingFee = widget.targetSellOrder.makingFee;
+    if ([300, 500, 700].contains(makingFee) == false) customFee = makingFee;
+    getSellPrice().then((String result) => setState(() {
           buyPrice = double.parse(result.replaceAll(',', ''));
+          if (goldPrice != buyPrice) customPrice = goldPrice;
         }));
+  }
+
+  void changeFee(double tappedFee) {
+    //debugPrint('w $weight tap $tappedWeight');
+    makingFee = tappedFee;
+    setState(() {});
+  }
+
+  void confirmCustomFee(String inputFee) {
+    makingFee = double.parse(inputFee);
+    customFee = makingFee;
+    Navigator.of(context).pop();
+    debugPrint(inputFee);
+    setState(() {});
+  }
+
+  bool isSelectedFee(double buttonFee) {
+    if (buttonFee == makingFee) {
+      //debugPrint('$buttonweight,$weight');
+      return true;
+    } else
+      return false;
+  }
+
+  void changeCustomFee(double tappedFee) {
+    debugPrint('customFee $tappedFee');
+    customFee = tappedFee;
+    makingFee = tappedFee;
+    showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+              title: Text(
+                "กำหนดค่ากำเหน็ด",
+                style: detailText,
+              ),
+              content: TextFormField(
+                controller: makingFeeField,
+                keyboardType: TextInputType.number,
+                style: detailText,
+                onFieldSubmitted: (inputPrice) {
+                  confirmCustomFee(inputPrice);
+                },
+              ),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('ยืนยัน'),
+                  onPressed: () {
+                    confirmCustomFee(makingFeeField.text);
+                  },
+                ),
+                FlatButton(
+                  child: Text('ยกเลิก'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
+            ));
+    setState(() {});
+  }
+
+  void editSellOrder() {
+    Navigator.pop(context,
+        SellOrder(goldPrice, weight, goldPercentage, price, makingFee));
   }
 
   @override
@@ -128,7 +202,7 @@ class _AddBuyOrderScreenState extends State<AddBuyOrderScreen> {
       return false;
   }
 
-  void _addBuyOrder() {
+  void _addSellOrder() {
     if (weight == 0 && goldPercentage == 0) {
       AlertDialog alert = AlertDialog(
         title: Text(
@@ -177,7 +251,8 @@ class _AddBuyOrderScreenState extends State<AddBuyOrderScreen> {
       );
     } else
       bloc.changeBuyPrice(goldPrice);
-    Navigator.pop(context, BuyOrder(goldPrice, weight, goldPercentage, price));
+    Navigator.pop(context,
+        SellOrder(goldPrice, weight, goldPercentage, price, makingFee));
     setState(() {});
   }
 
@@ -251,8 +326,7 @@ class _AddBuyOrderScreenState extends State<AddBuyOrderScreen> {
                             elevation: btnElevation,
                             shape: selectButtonShape,
                             // side: BorderSide(color: Colors.red)),
-                            color: (snapshot.data.buying == goldPrice &&
-                                    snapshot.data.buying != 0)
+                            color: (snapshot.data.buying == goldPrice)
                                 ? selectedBtn
                                 : unSelectedBtn,
                             child: Column(
@@ -263,11 +337,9 @@ class _AddBuyOrderScreenState extends State<AddBuyOrderScreen> {
                                   style: TextStyle(
                                       fontSize: 22,
                                       fontWeight: FontWeight.w800,
-                                      color:
-                                          (snapshot.data.buying == goldPrice &&
-                                                  snapshot.data.buying != 0)
-                                              ? (Colors.white)
-                                              : Colors.black),
+                                      color: (snapshot.data.buying == goldPrice)
+                                          ? (Colors.white)
+                                          : Colors.black),
                                 ),
                                 if (snapshot.data.buying == 0)
                                   Text(
@@ -275,11 +347,10 @@ class _AddBuyOrderScreenState extends State<AddBuyOrderScreen> {
                                     style: TextStyle(
                                         fontSize: 22,
                                         fontWeight: FontWeight.w800,
-                                        color: (snapshot.data.buying ==
-                                                    goldPrice &&
-                                                snapshot.data.buying != 0)
-                                            ? (Colors.white)
-                                            : Colors.black),
+                                        color:
+                                            (snapshot.data.buying == goldPrice)
+                                                ? (Colors.white)
+                                                : Colors.black),
                                   ),
                                 if (snapshot.data.buying != 0)
                                   Text(
@@ -406,25 +477,52 @@ class _AddBuyOrderScreenState extends State<AddBuyOrderScreen> {
                         )
                       ],
                     ),
-                    SizedBox(
-                      height: 50,
+                    Text(
+                      'ค่ากำเหน็ด',
+                      style:
+                          TextStyle(fontSize: 45, fontWeight: FontWeight.w800),
                     ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        selectFeeButton('300 บาท', 300, isSelectedFee(300)),
+                        selectFeeButton('500 บาท', 500, isSelectedFee(500)),
+                        selectFeeButton('700 บาท', 700, isSelectedFee(700)),
+                        RaisedButton(
+                          elevation: btnElevation,
+                          shape: selectButtonShape,
+                          child: Text(
+                            'กำหนดเอง',
+                            style: customFee == makingFee
+                                ? (smaller_decorationText)
+                                : smaller_detailTextBlack,
+                          ),
+                          color: customFee == makingFee
+                              ? selectedBtn
+                              : unSelectedBtn,
+                          onPressed: () => changeCustomFee(customFee),
+                        )
+                      ],
+                    ),
+                    // SizedBox(
+                    //   height: 50,
+                    // ),
                     Center(
-                        child: orderCard(
-                            weight, goldPercentage, goldPrice, price)),
-                    SizedBox(
-                      height: 50,
-                    ),
+                        child: orderCard(weight, goldPercentage, goldPrice,
+                            price, makingFee)),
+                    // SizedBox(
+                    //   height: 50,
+                    // ),
                     Center(
                       child: RaisedButton(
                           elevation: btnElevation,
                           shape: selectButtonShape,
                           color: unSelectedBtn,
                           child: Text(
-                            'เพิ่ม',
+                            'บันทึก',
                             style: detailTextBlack,
                           ),
-                          onPressed: _addBuyOrder),
+                          onPressed: editSellOrder),
                     )
                   ],
                 ),
@@ -486,6 +584,26 @@ class _AddBuyOrderScreenState extends State<AddBuyOrderScreen> {
     );
   }
 
+  Container selectFeeButton(
+      String title, double weightGrams, bool isSelectedWeight) {
+    return Container(
+      //color: isSelectedWeight ? (Colors.blue) : null,
+      child: RaisedButton(
+        elevation: btnElevation,
+        shape: selectButtonShape,
+        color: isSelectedWeight ? selectedBtn : unSelectedBtn,
+        child: Text(
+          title,
+          style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.w800,
+              color: isSelectedWeight ? (Colors.white) : Colors.black),
+        ),
+        onPressed: () => changeFee(weightGrams),
+      ),
+    );
+  }
+
   Container selectGoldButton(
       String title, double weightGrams, bool isSelectedWeight) {
     return Container(
@@ -507,8 +625,8 @@ class _AddBuyOrderScreenState extends State<AddBuyOrderScreen> {
   }
 }
 
-Container orderCard(
-    double weightGrams, double goldPercentage, double goldPrice, double price) {
+Container orderCard(double weightGrams, double goldPercentage, double goldPrice,
+    double price, double makingFee) {
   double _padding = 20;
   const TextStyle detailText =
       TextStyle(fontSize: 20, fontWeight: FontWeight.w800, color: Colors.black);
@@ -549,6 +667,10 @@ Container orderCard(
                       Text(
                         'เปอร์เซ็นทอง',
                         style: detailText,
+                      ),
+                      Text(
+                        'ค่ากำเหน็ด',
+                        style: detailText,
                       )
                     ],
                   )),
@@ -558,6 +680,10 @@ Container orderCard(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
+                      Text(
+                        ':',
+                        style: detailText,
+                      ),
                       Text(
                         ':',
                         style: detailText,
@@ -588,6 +714,10 @@ Container orderCard(
                       ),
                       Text(
                         '$goldPercentage %',
+                        style: detailText,
+                      ),
+                      Text(
+                        '$makingFee',
                         style: detailText,
                       )
                     ],
@@ -626,5 +756,4 @@ Container orderCard(
           )
         ],
       ));
-  ;
 }

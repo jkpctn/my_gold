@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:my_gold/config/routes.dart';
 import 'package:my_gold/presentation/add_buy_order_screen.dart';
+import 'package:my_gold/presentation/add_sell_order_screen.dart';
 import 'package:my_gold/presentation/display_buy_order_screen.dart';
+import 'package:my_gold/presentation/display_sell_order_screen.dart';
 import 'package:my_gold/presentation/edit_buy_order_screen.dart';
+import 'package:my_gold/presentation/edit_sell_order_screen.dart';
 import 'package:my_gold/presentation/home_screen.dart';
+import 'package:my_gold/presentation/stat_screen.dart';
 import 'package:my_gold/resource/data.dart';
 
 import 'config/routes.dart';
@@ -61,6 +65,22 @@ Route _registerRouteWithParameters(RouteSettings settings) {
       );
     });
   }
+  if (settings.name == AppRoutes.showSellOrder) {
+    return MaterialPageRoute(builder: (context) {
+      List<SellOrder> args = settings.arguments;
+      return DisplaySellOrderScreen(
+        orders: args,
+      );
+    });
+  }
+  if (settings.name == AppRoutes.showStat) {
+    return MaterialPageRoute(builder: (context) {
+      StatArguments tmp = settings.arguments;
+      return StatScreen(
+        data: tmp,
+      );
+    });
+  }
   if (settings.name == AppRoutes.addBuyOrder) {
     return MaterialPageRoute(builder: (context) {
       return AddBuyOrderScreen();
@@ -71,6 +91,19 @@ Route _registerRouteWithParameters(RouteSettings settings) {
     return MaterialPageRoute(builder: (context) {
       return EditBuyOrderScreen(
         targetBuyOrder: tmp,
+      );
+    });
+  }
+  if (settings.name == AppRoutes.addSellOrder) {
+    return MaterialPageRoute(builder: (context) {
+      return AddSellOrderScreen();
+    });
+  }
+  if (settings.name == AppRoutes.editSellOrder) {
+    SellOrder tmp = settings.arguments;
+    return MaterialPageRoute(builder: (context) {
+      return EditSellOrderScreen(
+        targetSellOrder: tmp,
       );
     });
   }

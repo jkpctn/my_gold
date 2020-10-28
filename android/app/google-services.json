@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "473711267760",
+    "firebase_url": "https://my-gold-app.firebaseio.com",
+    "project_id": "my-gold-app",
+    "storage_bucket": "my-gold-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:473711267760:android:6d990267cf21c762739075",
+        "android_client_info": {
+          "package_name": "com.example.my_gold"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "473711267760-h4npm0hfgk2v3rrg9gkbmjleiqq6f4dp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.my_gold",
+            "certificate_hash": "a0c1e82ff19b4f03a6331c7239e8fcbd56112786"
+          }
+        },
+        {
+          "client_id": "473711267760-dpj4n1sbod6kmsnj62nqhle4t2fq2t2h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCLRt9fYZFgRwQtJ_ZQpOD-8JN4seaU2xc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "473711267760-dpj4n1sbod6kmsnj62nqhle4t2fq2t2h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
